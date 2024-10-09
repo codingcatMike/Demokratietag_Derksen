@@ -1,1 +1,0 @@
-"# Demokratietag_Derksen" 
