@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+{% for person in person %}
+    <div class="people"><p>{{person.name}}, {{person.surname}} || -> {{person.entry_time}} <- {{person.exit_time}} &nbsp|| &nbsp</p><p class="time">{{person.verbleibende_zeit}}</p> <button class="button" id="{{person.person_id}}" onclick="deletep(event)">Remove</button></div>
+{% endfor %}
+
+<script>
+function deletep(event) {
+    const personId = event.target.id;
+    const personName = event.target.parentNode.querySelector('p').textContent.split(',')[0];
+    const personSurname = event.target.parentNode.querySelector('p').textContent.split(',')[1].split(' ')[1];
+    const formData = new FormData();
+    formData.append('name', personName);
+    formData.append('surname', personSurname);
+    formData.append('person_id', personId);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    fetch('/show', { method: 'POST', body: formData });
+    page.reload()
+}
+
+ function pruefeDauer() {
+  // Alle Elemente mit der Klasse "people" auswählen
+  const peopleElements = document.querySelectorAll('.time');
+
+  // Durchlaufen aller Elemente
+  peopleElements.forEach((element) => {
+    // Inhalt des Elements auslesen
+    const inhalt = element.textContent;
+    if (inhalt.startsWith('-')) {
+      element.classList.add('red');
+    } else {
+    // Zeitformat: MM:SS
+    const [ stunden ,minuten, sekunden] = inhalt.split(':').map(Number);
+
+    // Gesamtsekunden berechnen
+    const gesamtSekunden = minuten * 60 + sekunden +  stunden * 60 * 60;
+
+
+    // Prüfen, ob die Dauer kleiner als 0:02:00 ist
+    if (gesamtSekunden < 120) {
+      element.classList.add('o');
+    }
+    // Prüfen, ob die Dauer zwischen 0:02:00 und 0:05:00 liegt
+    else if (gesamtSekunden >= 120 && gesamtSekunden < 300) {
+      element.classList.add('orange');
+    }
+    // Prüfen, ob die Dauer größer als 0:05:00 ist
+    else {
+      element.classList.add('green');
+    }
+ }});
+}
+
+
+// Funktion aufrufen
+pruefeDauer();
+
+function reloadpage() {
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    fetch('/update_item', { method: 'POST', body: formData })
+        .then(response => response.json())
+        .then(data => {
+            if (data.updated) {
+                setTimeout(function(){ window.location.reload(); }, 1000);
+            }
+        });
+}
+
+reloadpage()
+
+</script>
+</body>
+</html>
+<style>
+    body{
+        margin: 0px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .people {
+        background-color: #464646;
+        margin: 0px;
+        height:  50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgb(182, 179, 179);
+    }
+    .red {
+  color: red;
+}
+
+.orange {
+    color: orange;
+}
+.o {
+  color: rgb(255, 115, 0);
+
+}
+.green {
+    color: rgb(0, 231, 0);
+}
+.button {
+    margin-left: 40px;
+    
+}
+</style>
