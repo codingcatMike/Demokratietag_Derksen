@@ -25,6 +25,6 @@ urlpatterns = [
     path('add', add),
     path('show', show),
     path('update_item', update_item),
-    path('IBEK', IBEK),
+    
     path('check', check),
     ]

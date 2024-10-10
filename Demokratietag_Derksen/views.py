@@ -15,8 +15,6 @@ def startpage(request):
 def check(request):
     return render(request, 'check.html')
 
-def IBEK(request):
-    return render(request, 'IBEK.html')
 
 def show(request):
     if request.method  == 'POST':
