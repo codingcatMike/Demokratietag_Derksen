@@ -17,14 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from Demokratietag_Derksen.views import *
+from django.conf.urls import handler404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', startpage),
+    path('', startpage, name='startpage'),
     path('start', startpage),
     path('add', add),
     path('show', show),
     path('update_item', update_item),
-    
     path('check', check),
+    path('showPerson', ShowPers),
     ]

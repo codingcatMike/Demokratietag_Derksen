@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-fjc@+va5s=w1y@3)%-@co7*1km%clau#dbo(!frm&6$90c1mc_
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '*'
+    '*', 'localhost'
 ]
 
 

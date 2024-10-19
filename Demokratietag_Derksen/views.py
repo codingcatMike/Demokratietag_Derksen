@@ -6,14 +6,29 @@ from .models import Person
 from datetime import datetime, timedelta
 from datetime import date
 from django.http import HttpResponse
-import time
+from zoneinfo import ZoneInfo
+berlin_time = None
+from django.shortcuts import redirect
+from .models import *
+
+
+def ShowPers(request):
+    return render(request, 'Pers.html')
+
+
+
 
 
 def startpage(request):
     return render(request, 'index.html')
 
+def ShowPers(request):
+    person = Person.objects.all()
+    return render(request, 'PersShow.html', {'Person' : person})
+
 def check(request):
-    return render(request, 'check.html')
+    person = Person.objects.all()
+    return render(request, 'check.html', {'Person' : person})
 
 
 def show(request):
@@ -30,15 +45,19 @@ def show(request):
 from django.http import JsonResponse
 
 def update_item(request):
+    berlin_tz = ZoneInfo('Europe/Berlin')
+    berlin_time = datetime.now(berlin_tz)
+
     updated = False
     for person in Person.objects.all():
         exit_time = datetime.combine(date.today(), person.exit_time)
-        current_time = datetime.now()
-        current_time = current_time.replace(second=round(current_time.second), microsecond=0)
-        if exit_time > current_time:
-            verbleibende_Zeit = exit_time - current_time
+        exit_time = exit_time.replace(tzinfo=berlin_tz)  # Make exit_time offset-aware
+        
+        berlin_time = berlin_time.replace(second=round(berlin_time.second), microsecond=0)
+        if exit_time > berlin_time:
+            verbleibende_Zeit = exit_time - berlin_time
         else:
-            vor_ver_Zeit = current_time - exit_time
+            vor_ver_Zeit = berlin_time - exit_time
             verbleibende_Zeit = '-' + str(vor_ver_Zeit)
         
         if person.verbleibende_zeit != str(verbleibende_Zeit):
@@ -49,6 +68,9 @@ def update_item(request):
     return JsonResponse({'updated': updated})
 
 def add(request):
+    berlin_tz = ZoneInfo('Europe/Berlin')
+    berlin_time = datetime.now(berlin_tz)
+
     if Person.objects.exists():
         max_id = Person.objects.all().order_by('-person_id')[0].person_id
         max = max_id + 1
@@ -63,22 +85,22 @@ def add(request):
         exit_hours = int(request.POST.get('exit_hours'))
         exit_minutes = int(request.POST.get('exit_minutes'))
         completename = request.POST.get('completename')  
-        current_time = datetime.now()
-        current_time = current_time.replace(second=round(current_time.second), microsecond=0)
-        exit_time = current_time.replace(hour=exit_hours, minute=exit_minutes, second=0)
+        
+        berlin_time = berlin_time.replace(second=round(berlin_time.second), microsecond=0)
+        exit_time = berlin_time.replace(hour=exit_hours, minute=exit_minutes, second=0)
   
-        print(current_time)
+        print(berlin_time)
         print(exit_time)
-        verbleibende_zeit = exit_time - current_time
+        verbleibende_zeit = exit_time - berlin_time
         if verbleibende_zeit.total_seconds() < 0:
             verbleibende_zeit = timedelta(days=1) + verbleibende_zeit
             print(verbleibende_zeit)
         hours, remainder = divmod(verbleibende_zeit.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         verbleibende_zeit_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
-        print(current_time)
+        print(berlin_time)
         print(verbleibende_zeit)
-        person = Person(surname=surname, name=name, exit_time=exit_time, entry_time=current_time, verbleibende_zeit=str(verbleibende_zeit), person_id=max)
+        person = Person(surname=surname, name=name, exit_time=exit_time, entry_time=berlin_time, verbleibende_zeit=str(verbleibende_zeit), person_id=max)
         person.save()
         messages.success(request, 'Person added successfully')
     return render(request, 'add.html')

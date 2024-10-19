@@ -43,6 +43,9 @@ domReady(function () {
         alert("You Qr is : " + decodeText, decodeResult);
         var qrcode = decodeText, decodeResult
         alert(qrcode)
+        localStorage.setItem("Person", qrcode);
+        location.assign('/showPerson')
+
     }
 
     let htmlscanner = new Html5QrcodeScanner(
