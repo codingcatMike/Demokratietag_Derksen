@@ -4,8 +4,8 @@ from django.db import models
 class Person(models.Model):
     surname = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    exit_time = models.TimeField(null=True)
-    entry_time = models.TimeField(null=True)
+    exit_time = models.TimeField(null=True, blank=True)
+    entry_time = models.TimeField(null=True, blank=True)
     verbleibende_zeit = models.CharField(max_length=255)
     person_id = models.IntegerField(null=True)
 
