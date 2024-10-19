@@ -24,7 +24,7 @@ def startpage(request):
 
 def ShowPers(request):
     person = Person.objects.all()
-    return render(request, 'PersShow.html', {'Person' : person})
+    return render(request, 'PersShow.html', {'person' : person})
 
 def check(request):
     person = Person.objects.all()
