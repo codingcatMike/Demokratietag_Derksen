@@ -28,4 +28,5 @@ urlpatterns = [
     path('update_item', update_item),
     path('check', check),
     path('showPerson', ShowPers),
+    path('d', delete_database)
     ]

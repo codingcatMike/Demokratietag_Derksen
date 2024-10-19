@@ -30,6 +30,10 @@ def check(request):
     person = Person.objects.all()
     return render(request, 'check.html', {'Person' : person})
 
+def delete_database(request):
+    Person.objects.all().delete()
+    messages.success(request, 'Database deleted successfully')
+    return redirect('startpage')
 
 def show(request):
     if request.method  == 'POST':
