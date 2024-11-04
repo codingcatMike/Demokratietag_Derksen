@@ -6,34 +6,102 @@
     <title>Document</title>
 </head>
 <body>
-    <button onclick="addPerson()">Add Person</button>
+    <button onclick="Backtosite('/check')" style="position: absolute; top: 10px; left: 10px ; background-color: transparent;">𝄃𝄃𝄂𝄀</button>
+<button onclick="Backtosite('/add')" style="position: absolute; top: 10px; left: 60px ; background-color: transparent;">➕</button>
+<button onclick="Backtosite('/show')" style="position: absolute; top: 10px; left: 110px ; background-color: transparent;">👁️</button>
+    <button onclick="addPerson()" style="position: absolute; top: 50px; left: 10px">Add Person</button>
 </body>
 </html>
 <script>
-    function addPerson() {
-        var surename = prompt('Bitte Gebe den Vor-und Mittelnamen der Person ein')
-        var name = prompt('Bitte Gebe den Nachnamen von ' + surename + ' ein')
-        var exit_time = prompt('Bitte Gebe die Verlassenszeit von ' + surename + ' ' + name + ' ein')
-        var completename = surename + '' + name
-        const exitTimeParts = exit_time.split(':');
-        const hours = parseInt(exitTimeParts[0], 10);
-        const minutes = parseInt(exitTimeParts[1], 10);
-        let text = "Sind sie sicher?";
-        if (confirm(text) == true) {
-            const formData = new FormData();
-            formData.append('surname', surename);
-            formData.append('name', name);
-            formData.append('exit_time', exit_time);
-            formData.append('exit_hours', hours);
-            formData.append('exit_minutes', minutes);
-            formData.append('completename', completename);
-            formData.append('csrfmiddlewaretoken', '{{csrf_token}}');
-
-            fetch('/add', { method: 'POST', body: formData });
-
-        } else {
-            return completename
-        }
+function addPerson() {
+var surename = prompt('Bitte Gebe den Vor-und Mittelnamen der Person ein');
+var name = prompt('Bitte Gebe den Nachnamen von ' + surename + ' ein');
+var person_id = prompt('Bitte Gebe die Person ID von ' + surename + ' ' + name + ' (Leerlassen um eine ID zu generieren)');
+var exit_time = prompt('Bitte Gebe die Verlassenszeit von ' + surename + ' ' + name + ' ein');
+var klasse = prompt('Bitte Gebe die Klasse von ' + surename + ' ' + name + ' ein');
+var lehrer = prompt('Bitte Gebe den Namen des Lehrers/der Lehrerin von ' + surename + ' ' + name + ' ein');
+var raum = prompt('Bitte Gebe den Raum von ' + surename + ' ' + name + ' ein');
+var projekt = prompt('Bitte Gebe das Projekt von ' + surename + ' ' + name + ' ein');
+var dinge = prompt('Welche Dinge hat ' + surename + ' ' + name + ' dabei? (Komma getrennt)');
+var handy = prompt('Hat ' + surename + ' ' + name + ' ein Handy dabei (Ja/Nein)?');
+var anzahl = prompt('Anzahl der Anwesenden in der Klasse von ' + surename + ' ' + name + ':');
+var brotzeit = prompt('Brotzeit von ' + surename + ' ' + name + ':');
+var getraenk = prompt('Getränk von ' + surename + ' ' + name + ':');
+var anreise = prompt('Wie kommt ' + surename + ' ' + name + ' zur Schule hin?');
+var thiersee = prompt('Wie oft ist ' + surename + ' ' + name + ' in Thiersee?');
+    
+    var completename = surename + ' ' + name;
+    const exitTimeParts = exit_time.split(':');
+    const hours = parseInt(exitTimeParts[0], 10);
+    const minutes = parseInt(exitTimeParts[1], 10);
+    let text = "Sind sie sicher?";
+    
+    if (confirm(text) == true) {     formData.append('surname', surename);
+        formData.append('name', name);
+        formData.append('exit_time', exit_time);
+        formData.append('exit_hours', hours);
+        formData.append('exit_minutes', minutes);
+        formData.append('klasse', klasse);
+        formData.append('lehrer', lehrer);
+        formData.append('raum', raum);
+        formData.append('projekt', projekt);
+        formData.append('anreise', anreise);
+        formData.append('thiersee', thiersee);
+        formData.append('dinge', dinge);
+        formData.append('brotzeit', brotzeit);
+        formData.append('handy', handy);
+        formData.append('anzahl', anzahl);
+        formData.append('getraenk', getraenk);
+        formData.append('completename', completename);
+        formData.append('person_id', person_id);
+        formData.append('csrfmiddlewaretoken', '{{csrf_token}}');
+        fetch('/add', { method: 'POST', body: formData });
+    } else {
+        return completename;
     }
+}
+
+function Testcases() {
+
+// Mock the prompt and confirm functions
+window.prompt = jest.fn()
+  .mockReturnValueOnce('John') // surename
+  .mockReturnValueOnce('Doe') // name
+  .mockReturnValueOnce('') // person_id
+  .mockReturnValueOnce('10:30') // exit_time
+  .mockReturnValueOnce('10A') // klasse
+  .mockReturnValueOnce('Mr. Smith') // lehrer
+  .mockReturnValueOnce('Room 101') // raum
+  .mockReturnValueOnce('Science Project') // projekt
+  .mockReturnValueOnce('Laptop, Notebook') // dinge
+  .mockReturnValueOnce('Ja') // handy
+  .mockReturnValueOnce('25') // anzahl
+  .mockReturnValueOnce('Sandwich') // brotzeit
+  .mockReturnValueOnce('Water') // getraenk
+  .mockReturnValueOnce('Bus') // anreise
+  .mockReturnValueOnce('Twice a week'); // thiersee
+
+window.confirm = jest.fn().mockReturnValue(true);
+
+// Mock the FormData and fetch functions
+global.FormData = jest.fn().mockImplementation(() => {
+  return {
+    append: jest.fn()
+  };
+});
+
+global.fetch = jest.fn();
+
+// Call the addPerson function
+addPerson();
+
+// Check if FormData was called and fetch was executed with correct parameters
+expect(FormData).toHaveBeenCalled();
+expect(fetch).toHaveBeenCalledWith('/add', expect.objectContaining({
+  method: 'POST',
+  body: expect.any(FormData)
+}));
+
+}
 
 </script>

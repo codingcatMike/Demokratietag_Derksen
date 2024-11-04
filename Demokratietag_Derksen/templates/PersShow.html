@@ -6,15 +6,39 @@
     <title>Document</title>
 </head>
 <body>
-<button onclick="Backtosite()" style="position: absolute; top: 10px; left: 10px ; background-color: transparent;">🏠</button>
+<button onclick="Backtosite('/check')" style="position: absolute; top: 10px; left: 10px ; background-color: transparent;">𝄃𝄃𝄂𝄀</button>
+<button onclick="Backtosite('/add')" style="position: absolute; top: 10px; left: 60px ; background-color: transparent;">➕</button>
+<button onclick="Backtosite('/show')" style="position: absolute; top: 10px; left: 110px ; background-color: transparent;">👁️</button>
 {% for person in person %}
-    <div class="people" id="{{person.person_id}}"><p>{{person.name}}, {{person.surname}} || -> {{person.entry_time}} <- {{person.exit_time}} &nbsp|| &nbsp</p><p class="time">{{person.verbleibende_zeit}}</p> <button class="button"  onclick="Backtosite()">Back To Site</button></div>
+    <div class="people" id="{{person.person_id}}"><p>{{person.name}}, {{person.surname}} || -> {{person.entry_time}} <- {{person.exit_time}} &nbsp|| &nbsp</p><p class="time">{{person.verbleibende_zeit}}</p> <button class="button"  onclick="MoreInfo()">Toggle Info</button></div>
+    <div id="moreinfo">
+<p style="margin: 0px;">Vorname: {{person.name}}</p>
+<p>Nachname: {{person.surname}}</p>
+<p>Verlassenszeit: {{person.exit_time}}</p>
+<p>Eintrittszeit: {{person.entry_time}}</p>
+<p>Verbleibende Zeit: {{person.verbleibende_zeit}}</p>
+<p>Personen ID: {{person.person_id}}</p>
+<p>Klasse: {{person.klasse}}</p>
+<p>Lehrer: {{person.lehrer}}</p>
+<p>Raum: {{person.raum}}</p>
+<p>Projekt: {{person.projekt}}</p>
+<p>Anreise: {{person.anreise}}</p>
+<p>Thiersee: {{person.thiersee}}</p>
+<p>Dinge: {{person.dinge}}</p>
+<p>Brotzeit: {{person.brotzeit}}</p>
+<p>Handy: {{person.handy}}</p>
+<p>Anzahl: {{person.anzahl}}</p>
+<p>Getränk: {{person.getraenk}}</p>
+<p>Completename: {{person.completename}}</p>
+<p>In/Out: {{person.in_or_out}}</p>
+<p>Times In: {{person.times_in}}</p>
+    </div>
 {% endfor %}
 <a href="/add" id="link" style="display: none; position: absolute; top: 40px; left: 10px;">Hier Eine Person Registrieren</a>
 
 <script>
-function  Backtosite(){
-    location.assign('/check')
+function  Backtosite(x){
+    location.assign(x)
 }
 
 function Show(x) {
@@ -72,32 +96,22 @@ function reloadpage() {
         .then(response => response.json())
         .then(data => {
             if (data.updated) {
-                setTimeout(function(){ window.location.reload(); }, 5000);
+                setTimeout(function(){ window.location.reload(); }, 20000);
             }
         });
 }
 
 reloadpage()
 Show(localStorage.getItem('Person'))
+function MoreInfo() {
+document.getElementById("moreinfo").style.display = document.getElementById("moreinfo").style.display === "block" ? "none" : "block";
+}
 
 </script>
 </body>
 </html>
 <style>
-    body{
-        margin: 0px;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-    .people {
-        background-color: #464646;
-        margin: 0px;
-        height:  50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgb(182, 179, 179);
-        display: none;
-    }
+
     .red {
   color: red;
 }
@@ -115,6 +129,37 @@ Show(localStorage.getItem('Person'))
 .button {
     margin-left: 40px;
     
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.people, #moreinfo {
+    margin: 0; /* Setze Margin auf 0 */
+    padding: 0; /* Setze Padding auf 0 */
+}
+
+.people {
+    background-color: #464646;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(182, 179, 179);
+    display: none; /* Wurde hier wiederholt */
+}
+
+#moreinfo {
+    background-color: #6b6a6a;
+    justify-content: center;
+    color: rgb(182, 179, 179);
+    display: none;
+    padding-left: 20px;
+}
+p {
+    margin: 4px; /* Setze Margin auf 0 für alle p-Elemente */
 }
 
 </style>

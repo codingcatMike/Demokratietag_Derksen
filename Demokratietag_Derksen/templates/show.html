@@ -6,8 +6,11 @@
     <title>Document</title>
 </head>
 <body>
+  <button onclick="Backtosite('/check')" style="position: absolute; top: 10px; left: 10px ; background-color: transparent;">𝄃𝄃𝄂𝄀</button>
+<button onclick="Backtosite('/add')" style="position: absolute; top: 10px; left: 60px ; background-color: transparent;">➕</button>
+<button onclick="Backtosite('/show')" style="position: absolute; top: 10px; left: 110px ; background-color: transparent;">👁️</button>
 {% for person in person %}
-    <div class="people"><p>{{person.name}}, {{person.surname}} || -> {{person.entry_time}} <- {{person.exit_time}} &nbsp|| &nbsp</p><p class="time">{{person.verbleibende_zeit}}</p> <button class="button" id="{{person.person_id}}" onclick="deletep(event)">Remove</button></div>
+    <div class="people"><p>{{person.name}}, {{person.surname}} || -> {{person.entry_time}} <- {{person.exit_time}} &nbsp|| {{person.person_id}} || &nbsp</p><p class="time">{{person.verbleibende_zeit}}</p> <button class="button" id="{{person.person_id}}" onclick="deletep(event)">Remove</button></div>
 {% endfor %}
 
 <script>
@@ -69,7 +72,7 @@ function reloadpage() {
         .then(response => response.json())
         .then(data => {
             if (data.updated) {
-                setTimeout(function(){ window.location.reload(); }, 1000);
+                setTimeout(function(){ window.location.reload(); }, 5000);
             }
         });
 }
@@ -98,7 +101,7 @@ reloadpage()
 }
 
 .orange {
-    color: orange;
+    color: rgb(229, 255, 0);
 }
 .o {
   color: rgb(255, 115, 0);
